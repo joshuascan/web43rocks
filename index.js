@@ -1,18 +1,23 @@
 require('dotenv').config()
-
+const path = require('path')
 const express = require('express')
 
 const server = express()
 
 server.use(express.json())
+server.use(express.static(path.join(__dirname, 'client/build')))
 
 if (process.env.NODE_ENV === 'development') {
     const cors = require('cors')
     server.use(cors())
 }
 
+server.get('/api/hello', (req, res) => {
+    res.json({message: 'hello'})
+})
+
 server.use('*', (req, res) => {
-    res.send('<h1>success</h1>')
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'))
 })
 
 const PORT = process.env.PORT || 4000
